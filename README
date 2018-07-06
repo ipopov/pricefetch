@@ -1,2 +1,2 @@
 Crontab entry, to fetch data at 8pm every weekday:
-0 20 * * 1-5 /home/ipopov/xpath/bin/pricefetch >> /home/ipopov/ledger/price-db
+0 20 * * 1-5 /home/ipopov/.../bin/pricefetch >> /home/ipopov/.../db

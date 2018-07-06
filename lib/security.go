@@ -1,6 +1,11 @@
 package pricefetch
 
-type Security interface {
-  GetPrice() (float64, error)
-  GetName() string
+type Security struct {
+	Name string
+	// TODO: Convert this to decimal.
+	Price float64
+}
+
+type SecurityFetcher interface {
+	Run() ([]Security, error)
 }

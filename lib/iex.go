@@ -1,38 +1,48 @@
 package pricefetch
 
 import (
-	"errors"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
-	"strconv"
-
-	"github.com/antchfx/jsonquery"
+	"strings"
 )
 
-type IexStock struct {
-	Name string
+type IexFetcher struct {
+	Names []string
 }
 
-func (x IexStock) GetName() string {
-	return x.Name
+type quote struct {
+	LatestPrice float64 `json:"latestPrice"`
 }
 
-func (stock IexStock) GetPrice() (float64, error) {
+type stock struct {
+	Quote quote `json:"quote"`
+}
+
+func (f IexFetcher) Run() ([]Security, error) {
+	var ret []Security
 	client := http.Client{}
 
-	resp, err := client.Get(fmt.Sprintf("https://api.iextrading.com/1.0/stock/%s/quote", stock.Name))
+	resp, err := client.Get(fmt.Sprintf(
+		"https://api.iextrading.com/1.0/stock/market/batch?types=quote&symbols=%s",
+		strings.Join(f.Names, ",")))
 	if err != nil {
-		return 0, err
+		return ret, err
+	}
+	resp_bytes, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return ret, err
 	}
 
-	quote, err := jsonquery.Parse(resp.Body)
+	var quotes map[string]stock
+	err = json.Unmarshal(resp_bytes, &quotes)
 	if err != nil {
-		return 0, err
+		return ret, err
 	}
 
-	price := jsonquery.FindOne(quote, "//latestPrice")
-	if price == nil {
-		return 0, errors.New(quote.InnerText())
+	for k, v := range quotes {
+		ret = append(ret, Security{strings.ToLower(k), v.Quote.LatestPrice})
 	}
-	return strconv.ParseFloat(price.InnerText(), 32)
+	return ret, err
 }
