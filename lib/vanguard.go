@@ -20,22 +20,18 @@ type VanguardFetcher struct {
 	Funds []VanguardFund
 }
 
-type rssRepr struct {
-	Text []byte `xml:"channel>item>title"`
-}
-
 func (fund VanguardFund) get() (float64, error) {
 	client := http.Client{}
-
 	resp, err := client.Get(fmt.Sprintf("http://personal.vanguard.com/us/FundsRSS?FundId=%d", fund.Id))
 	if err != nil {
 		return 0, err
 	}
-	var rss rssRepr
+	var rss struct {
+		Text []byte `xml:"channel>item>title"`
+	}
 	d := xml.NewDecoder(resp.Body)
 	d.CharsetReader = charset.NewReaderLabel
-	err = d.Decode(&rss)
-	if err != nil {
+	if err = d.Decode(&rss); err != nil {
 		return 0, err
 	}
 	capture_price := regexp.MustCompile(`^Price as of [0-9/]+: \$([^ ]+).*$`)
