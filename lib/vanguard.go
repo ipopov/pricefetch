@@ -1,14 +1,14 @@
 package pricefetch
 
 import (
+	"encoding/xml"
 	"errors"
 	"fmt"
+	"golang.org/x/net/html/charset"
 	"net/http"
 	"regexp"
 	"strconv"
 	"sync"
-
-	"github.com/antchfx/xmlquery"
 )
 
 type VanguardFund struct {
@@ -20,6 +20,10 @@ type VanguardFetcher struct {
 	Funds []VanguardFund
 }
 
+type rssRepr struct {
+	Text []byte `xml:"channel>item>title"`
+}
+
 func (fund VanguardFund) get() (float64, error) {
 	client := http.Client{}
 
@@ -27,22 +31,16 @@ func (fund VanguardFund) get() (float64, error) {
 	if err != nil {
 		return 0, err
 	}
-
-	rss, err := xmlquery.Parse(resp.Body)
+	var rss rssRepr
+	d := xml.NewDecoder(resp.Body)
+	d.CharsetReader = charset.NewReaderLabel
+	err = d.Decode(&rss)
 	if err != nil {
 		return 0, err
 	}
-
-	price := xmlquery.FindOne(rss, "//item/title")
-	if price == nil {
-		return 0, errors.New(rss.OutputXML(true))
-	}
-	capture_price := regexp.MustCompile("^[^$]*\\$([^ ]+).*")
-	matches := capture_price.FindSubmatch([]byte(price.InnerText()))
-	if matches == nil {
-		return 0, errors.New("Regexp failed to match.")
-	}
-	if len(matches) != 2 {
+	capture_price := regexp.MustCompile(`^Price as of [0-9/]+: \$([^ ]+).*$`)
+	matches := capture_price.FindSubmatch(rss.Text)
+	if matches == nil || len(matches) != 2 {
 		return 0, errors.New("Regexp failed to match.")
 	}
 	return strconv.ParseFloat(string(matches[1]), 64)
@@ -67,5 +65,5 @@ func (f VanguardFetcher) Run() ([]Security, error) {
 			return ret, err
 		}
 	}
-	return ret, err
+	return ret, nil
 }
