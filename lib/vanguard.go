@@ -36,7 +36,7 @@ func (fund VanguardFund) get() (float64, error) {
 	}
 	capture_price := regexp.MustCompile(`^Price as of [0-9/]+: \$([^ ]+).*$`)
 	matches := capture_price.FindSubmatch(rss.Text)
-	if matches == nil || len(matches) != 2 {
+	if len(matches) != 2 {
 		return 0, errors.New("Regexp failed to match.")
 	}
 	return strconv.ParseFloat(string(matches[1]), 64)

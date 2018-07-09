@@ -2,7 +2,9 @@ package pricefetch
 
 type Security struct {
 	Name string
-	// TODO: Convert this to decimal.
+	// We're not doing arithmetic on these, and don't expect to need
+	// more than four digits of decimal precision. So there's no need to
+	// use a decimal (fixed point) type.
 	Price float64
 }
 
