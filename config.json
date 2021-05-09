@@ -1,0 +1,78 @@
+[
+  {
+    "Funds": [
+      {
+        "Id": 7555,
+        "Name": "bond_cit"
+      },
+      {
+        "Id": 7553,
+        "Name": "extended_cit"
+      },
+      {
+        "Id": 7554,
+        "Name": "s_p_cit"
+      },
+      {
+        "Id": 1682,
+        "Name": "cit_tret"
+      },
+      {
+        "Id": 7743,
+        "Name": "cit_tret_new"
+      },
+      {
+        "Id": 1870,
+        "Name": "vtpsx"
+      },
+      {
+        "Id": 569,
+        "Name": "vtiax"
+      },
+      {
+        "Id": 585,
+        "Name": "vtsax"
+      },
+      {
+        "Id": 1457,
+        "Name": "vdipx"
+      },
+      {
+        "Id": 1865,
+        "Name": "vemrx"
+      },
+      {
+        "Id": 570,
+        "Name": "vfwax"
+      },
+      {
+        "Id": 2011,
+        "Name": "vtifx"
+      },
+      {
+        "Id": 31,
+        "Name": "vmltx"
+      },
+      {
+        "Id": 76,
+        "Name": "vnytx"
+      }
+    ]
+  },
+  {
+    "Names": [
+      "vxus",
+      "ixus",
+      "veu",
+      "vti",
+      "vwo",
+      "schb",
+      "vt",
+      "spdw",
+      "sptm",
+      "goog",
+      "onem"
+    ],
+    "ApiKey": "sk_xxxx"
+  }
+]
