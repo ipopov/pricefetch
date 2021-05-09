@@ -1,7 +1,10 @@
 package main
 
 import (
+	"encoding/json"
+	"flag"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"math"
 	"sync"
@@ -9,6 +12,11 @@ import (
 
 	pf "github.com/ipopov/pricefetch/lib"
 )
+
+type Config struct {
+	V pf.VanguardFetcher
+	X pf.IexFetcher
+}
 
 func longestName(xs []pf.Security) int {
 	ret := 0
@@ -33,19 +41,33 @@ func longestPrice(xs []pf.Security) int {
 }
 
 func main() {
-	results := make([][]pf.Security, len(config))
+	var configFlag = flag.String("config", "", "")
+	flag.Parse()
+
+	var config Config
+
+	config_serialized, err := ioutil.ReadFile(*configFlag)
+	if err != nil {
+		log.Panic(err)
+	}
+	err = json.Unmarshal(config_serialized, &config)
+	if err != nil {
+		log.Panic(err)
+	}
+	results := make([][]pf.Security, 2)
 	var wg sync.WaitGroup
-	wg.Add(len(config))
-	for i, v := range config {
-		go func(out_index int, s pf.SecurityFetcher) {
+	wg.Add(2)
+	get :=
+		func(out_index int, s pf.SecurityFetcher) {
 			prices, err := s.Run()
 			if err != nil {
 				log.Panic(err)
 			}
 			results[out_index] = prices
 			wg.Done()
-		}(i, v)
-	}
+		}
+	go get(0, config.V)
+	go get(1, config.X)
 	wg.Wait()
 
 	out := []pf.Security{}
