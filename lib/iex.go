@@ -9,14 +9,15 @@ import (
 
 type IexFetcher struct {
 	Names []string
+  ApiKey string
 }
 
 func (f IexFetcher) Run() ([]Security, error) {
 	var ret []Security
 	client := http.Client{}
 	resp, err := client.Get(fmt.Sprintf(
-		"https://api.iextrading.com/1.0/stock/market/batch?types=quote&symbols=%s",
-		strings.Join(f.Names, ",")))
+"https://cloud.iexapis.com/stable/stock/market/batch?types=quote&symbols=%s&token=%s",
+		strings.Join(f.Names, ","), f.ApiKey))
 	if err != nil {
 		return ret, err
 	}

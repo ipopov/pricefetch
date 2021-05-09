@@ -20,7 +20,7 @@ var config = []pf.SecurityFetcher{
 		},
 	},
 	pf.IexFetcher{
-		[]string{
+		Names: []string{
 			"vxus",
 			"veu",
 			"vti",
