@@ -1,5 +1,5 @@
-[
-  {
+{
+  "V": {
     "Funds": [
       {
         "Id": 7555,
@@ -50,6 +50,10 @@
         "Name": "vtifx"
       },
       {
+        "Id": 5028,
+        "Name": "vtwax"
+      },
+      {
         "Id": 31,
         "Name": "vmltx"
       },
@@ -59,7 +63,7 @@
       }
     ]
   },
-  {
+  "X":{
     "Names": [
       "vxus",
       "ixus",
@@ -71,8 +75,12 @@
       "spdw",
       "sptm",
       "goog",
-      "onem"
+      "onem",
+      "abb",
+      "bynd",
+      "bnd",
+      "vtip"
     ],
     "ApiKey": "sk_xxxx"
   }
-]
+}
