@@ -1,7 +1,7 @@
 Building
 
 ```
-docker build --no-cache --target bin --output .  .
+docker build --target bin --output .  .
 ```
 
 Crontab entry, to fetch data at 8pm every weekday:
