@@ -15,7 +15,7 @@ import (
 
 type Config struct {
 	V pf.VanguardFetcher
-	X pf.IexFetcher
+	P pf.PolygonFetcher
 }
 
 func longestName(xs []pf.Security) int {
@@ -67,7 +67,7 @@ func main() {
 			wg.Done()
 		}
 	go get(0, config.V)
-	go get(1, config.X)
+	go get(1, config.P)
 	wg.Wait()
 
 	out := []pf.Security{}
