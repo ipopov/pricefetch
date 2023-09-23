@@ -63,7 +63,7 @@
       }
     ]
   },
-  "X":{
+  "P":{
     "Names": [
       "vxus",
       "ixus",
@@ -81,6 +81,6 @@
       "bnd",
       "vtip"
     ],
-    "ApiKey": "sk_80d732daa79944ef9987b59509553393"
+    "ApiKey": "blah"
   }
 }
