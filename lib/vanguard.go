@@ -6,6 +6,7 @@ import (
 	"fmt"
 	e "github.com/pkg/errors"
 	"golang.org/x/net/html/charset"
+	"golang.org/x/net/http2"
 	"net/http"
 	"regexp"
 	"strconv"
@@ -21,8 +22,7 @@ type VanguardFetcher struct {
 	Funds []VanguardFund
 }
 
-func (fund VanguardFund) get() (float64, error) {
-	client := http.Client{}
+func (fund VanguardFund) get(client *http.Client) (float64, error) {
 	resp, err := client.Get(fmt.Sprintf("https://personal.vanguard.com/us/FundsRSS?FundId=%d", fund.Id))
 	if err != nil {
 		return 0, e.Wrap(err, "fetching vg fund")
@@ -48,9 +48,10 @@ func (f VanguardFetcher) Run() ([]Security, error) {
 	errs := make([]error, len(f.Funds))
 	var wg sync.WaitGroup
 	wg.Add(len(f.Funds))
+	client := http.Client{Transport: &http2.Transport{}}
 	for out_index, fund := range f.Funds {
 		go func(out_index int, fund VanguardFund) {
-			price, err := fund.get()
+			price, err := fund.get(&client)
 			errs[out_index] = e.Wrap(err, fmt.Sprintf("for fund %v", fund))
 			ret[out_index] = Security{fund.Name, price}
 			wg.Done()
